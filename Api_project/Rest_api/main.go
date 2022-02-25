@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	//"github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	//"github.com/fatih/color"
+	//"github.com/gorilla/mux"
 )
 
 type Article struct {
@@ -18,7 +20,7 @@ type Articles []Article
 
 func allArticles(w http.ResponseWriter, r *http.Request){
 	article := Articles{
-		Article{Title: "Test title", Desc: "Test description", Content: "Hello Worlddddddeeee"},
+		Article{Title: "Test title", Desc: "Test description", Content: "Hello World"},
 	}
 
 	fmt.Println("Endpoint Hit: All Articals Endpoint")
@@ -30,9 +32,15 @@ func homePage(w http.ResponseWriter, r *http.Request){
 }
 
 func handleRequests(){
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/articles", allArticles)
-	log.Fatal(http.ListenAndServe(":8081", nil))
+
+	myRoute := mux.NewRouter().StrictSlash(true)
+	myRoute.HandleFunc("/", homePage)
+	myRoute.HandleFunc("/articles", allArticles)
+	log.Fatal(http.ListenAndServe(":8081", myRoute))
+
+	//http.HandleFunc("/", homePage)
+	//http.HandleFunc("/articles", allArticles)
+	//log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
 func main(){
